@@ -1,0 +1,745 @@
+
+<!DOCTYPE html>
+<script>var __pbpa = true;</script><script>var translated_warning_string = 'Warning: Never enter your Tumblr password unless \u201chttps://www.tumblr.com/login\u201d\x0ais the address in your web browser.\x0a\x0aYou should also see a green \u201cTumblr, Inc.\u201d identification in the address bar.\x0a\x0aSpammers and other bad guys use fake forms to steal passwords.\x0a\x0aTumblr will never ask you to log in from a user\u2019s blog.\x0a\x0aAre you absolutely sure you want to continue?';</script><script type="text/javascript" language="javascript" src="https://assets.tumblr.com/assets/scripts/pre_tumblelog.js?_v=66ac555bc5745ebe20abdae7cbc40704"></script>
+<!doctype HTML>
+<style>figure{margin:0}.tmblr-iframe{position:absolute}.tmblr-iframe.hide{display:none}.tmblr-iframe--amp-cta-button{visibility:hidden;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);z-index:100}.tmblr-iframe--amp-cta-button.tmblr-iframe--loaded{visibility:visible;animation:iframe-app-cta-transition .2s ease-out}</style><link rel="stylesheet" media="screen" href="https://assets.tumblr.com/client/prod/standalone/blog-network-npf/index.build.css?_v=c451b85cf126275a22cf7ca62ddacdc0"><link rel="shortcut icon" href="http://sv.tinypic.com?ref=qq68e9">
+ 
+<html>
+
+ 
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS"> 
+<meta http-equiv="Content-Style-Type" content="text/css"> 
+<meta http-equiv="Content-Script-Type" content="text/javascript"> 
+
+<script type="text/javascript"> 
+//<!--
+ 
+var namMember = new Array(
+"macmillan estate",
+"autohaven wreckers",
+"coldwind farm", 
+"crotus prenn asylum", 
+"haddonfield",
+"backwater swamp",
+"lery's memorial institute",
+"red forest",
+"springwood",
+"the game",
+"yamaoka estate",
+"ormond",
+"hawkins national laboratory",
+"grave of glenvale",
+"midwich elementary school",
+"raccoon city police station",
+"forsaken boneyard",
+"garden of joy",
+"the shattered square"
+);
+ 
+ 
+//*********************************************************
+ 
+var lstMember = new Array(); 
+var parent = new Array(); 
+var equal = new Array(); 
+var rec = new Array(); 
+var cmp1,cmp2; 
+var head1,head2;
+var nrec;  
+var numQuestion; 
+var totalSize; 
+var finishSize;
+var finishFlag;
+ 
+//The initialization of the variable+++++++++++++++++++++++++++++++++++++++++++++
+ 
+function initList() {
+    var n = 0;
+    var mid; 
+    var i;
+    
+    
+    
+    //The sequence that you should sort
+    
+    lstMember[n] = new Array();
+
+    for (i=0; i<namMember.length; i++) {
+        lstMember[n][i] = i;
+    }
+    
+    parent[n] = -1;
+    totalSize = 0;
+    
+    n++;
+    
+    for (i=0; i<lstMember.length; i++) {
+    
+    //And element divides it in two/more than two
+    
+    //Increase divided sequence of last in first member
+    
+        if(lstMember[i].length>=2) {
+    
+            mid = Math.ceil(lstMember[i].length/2);
+        
+            lstMember[n] = new Array();
+            lstMember[n] = lstMember[i].slice(0,mid);
+            
+            totalSize += lstMember[n].length;
+            
+            parent[n] = i;
+            n++;
+            
+            lstMember[n] = new Array();
+            lstMember[n] = lstMember[i].slice(mid,lstMember[i].length);
+            
+            totalSize += lstMember[n].length;
+            
+            parent[n] = i;
+            n++;
+        
+        }
+    
+    }
+    
+    
+    
+    //Preserve this sequence
+    
+    for (i=0; i<namMember.length; i++) {
+        rec[i] = 0; 
+    }
+    
+    nrec = 0;
+    
+    
+    
+    //List that keeps your results
+    
+    //Value of link initial
+    
+    // Value of link initial
+    
+    for (i=0; i<=namMember.length; i++) {
+        equal[i] = -1;
+    }
+    
+    
+    
+    cmp1 = lstMember.length-2;
+    cmp2 = lstMember.length-1;
+
+    head1 = 0;
+    head2 = 0;
+    
+    numQuestion = 1;
+
+    finishSize = 0;
+    finishFlag = 0;
+ 
+}
+ 
+ 
+ 
+//&#12522;&#12473;&#12488;&#12398;&#12477;&#12540;&#12488;+++++++++++++++++++++++++++++++++++++++++++
+ 
+//flag&#65306;Don't know characters
+ 
+// -1&#65306;Chose the left
+ 
+// 0&#65306;Tie
+ 
+// 1&#65306;Chose the right
+ 
+function sortList(flag) {
+ 
+    var i;
+    var str;
+            
+    //rec preservation
+    
+    if (flag<0) {
+    
+        rec[nrec] = lstMember[cmp1][head1];
+        
+        head1++;
+        nrec++;
+        finishSize++;
+        
+        while (equal[rec[nrec-1]]!=-1) {
+        
+            rec[nrec] = lstMember[cmp1][head1];
+            head1++; 
+            nrec++;
+            finishSize++;
+        
+        }
+    
+    }
+    
+    else if (flag>0) {
+    
+        rec[nrec] = lstMember[cmp2][head2];
+        
+        head2++;    
+        nrec++; 
+        finishSize++;
+        
+        while (equal[rec[nrec-1]]!=-1) {
+        
+            rec[nrec] = lstMember[cmp2][head2];
+            head2++;
+            nrec++;
+            finishSize++;
+        
+        }
+    
+    }
+    
+    else {
+    
+        rec[nrec] = lstMember[cmp1][head1];
+        head1++;
+        nrec++;
+        finishSize++;
+        
+        while (equal[rec[nrec-1]]!=-1) {
+        
+            rec[nrec] = lstMember[cmp1][head1]; 
+            head1++;
+            nrec++;
+            finishSize++;
+        
+        }
+    
+        equal[rec[nrec-1]] = lstMember[cmp2][head2];
+        rec[nrec] = lstMember[cmp2][head2];
+
+        head2++;
+        nrec++;
+        finishSize++;
+        
+        while (equal[rec[nrec-1]]!=-1) {
+        
+            rec[nrec] = lstMember[cmp2][head2];
+            head2++;
+            nrec++;
+            finishSize++;
+            
+        }
+    
+    }
+    
+    
+    
+    //Processing after finishing with one list
+    
+    if (head1<lstMember[cmp1].length && head2==lstMember[cmp2].length) {
+    
+        //List the remainder of cmp2 copies, list cmp1 copies when finished scanning
+        
+        while (head1<lstMember[cmp1].length){
+        
+            rec[nrec] = lstMember[cmp1][head1];
+            
+            head1++;
+            nrec++;
+            finishSize++;
+        
+        }
+        
+    }
+        
+    else if (head1==lstMember[cmp1].length && head2<lstMember[cmp2].length) {
+        
+        //List the remainder of cmp1 copies, list cmp2 copies when finished scanning
+        
+        while (head2<lstMember[cmp2].length){
+        
+            rec[nrec] = lstMember[cmp2][head2];
+            
+            head2++;
+            nrec++;
+            finishSize++;
+        
+        }
+    
+    }
+    
+    
+    
+    //When it arrives at the end of both lists
+    
+    //Update a pro list
+    
+    if (head1==lstMember[cmp1].length && head2==lstMember[cmp2].length) {
+    
+        for (i=0; i<lstMember[cmp1].length+lstMember[cmp2].length; i++) { 
+            lstMember[parent[cmp1]][i] = rec[i];
+        }
+        
+        lstMember.pop();
+        lstMember.pop();
+        
+        cmp1 = cmp1-2;
+        cmp2 = cmp2-2;
+        head1 = 0;
+        head2 = 0;
+        
+        
+        
+        //Initialize the rec before performing the new comparison
+        
+        if (head1==0 && head2==0) {
+        
+            for (i=0; i<namMember.length; i++) {   
+                rec[i] = 0;
+            }
+            
+            nrec = 0;
+        
+        }
+    
+    }
+    
+    if (cmp1<0) {
+    
+        str = "battle #"+(numQuestion-1)+", "+Math.floor(finishSize*100/totalSize)+"% sorted.";
+        document.getElementById("battleNumber").innerHTML = str;
+    
+        showResult();
+        finishFlag = 1;
+    
+    }
+    
+    else {
+        showImage();
+    }
+ 
+}
+ 
+ 
+ 
+//The results+++++++++++++++++++++++++++++++++++++++++++++++
+ 
+//&#38918;&#20301;=Rank/Grade/Position/Standing/Status
+ 
+//&#21517;&#21069;=Identification term
+ 
+function showResult() {
+ 
+    var ranking = 1;
+    var sameRank = 1;
+    var str = "";
+    var i;
+    
+    //str += "<table style=\"width:200px; font-size:18px; line-height:120%; margin-left:auto; margin-right:auto; border:1px solid #000; border-collapse:collapse\" align=\"center\">";
+    //str += "<tr><td style=\"color:#ffffff; background-color:#e097d9; text-align:center;\">rank<\/td><td style=\"color:#ffffff; background-color:#e097d9; text-align:center;\">options<\/td><\/tr>";
+    str += "<table class=\"resultTable\" align=\"center\">";
+    str += "<tr><td style=\"color:#000; background-color:#22ccd4; text-align:center;\">rank<\/td><td style=\"color:#000; background-color:#22ccd4; text-align:center;\">options<\/td><\/tr>";
+    
+    for (i=0; i<namMember.length; i++) {
+    
+        str += "<tr><td style=\" text-align:center; width: 100px; line-height:170%; padding-right:-50%;\">"+ranking+"<\/td><td style=\"line-height:200%; padding-left:-50%;\">"+namMember[lstMember[0][i]]+"<\/td><\/tr>";
+        if (i<namMember.length-1) {
+            if (equal[lstMember[0][i]]==lstMember[0][i+1]) {
+            sameRank++;
+            } 
+            else {
+                ranking += sameRank;
+                sameRank = 1;
+            }
+        }
+    }
+    
+    str += "<\/table>";
+    document.getElementById("resultField").innerHTML = str;
+ 
+}
+ 
+//Indicates two elements to compare+++++++++++++++++++++++++++++++++++
+ 
+function showImage() {
+ 
+    var str0 = "battle #"+numQuestion+", "+Math.floor(finishSize*100/totalSize)+"% sorted.";
+    var str1 = ""+toNameFace(lstMember[cmp1][head1]);
+    var str2 = ""+toNameFace(lstMember[cmp2][head2]);
+
+    // for images: <img src=\"http://placehold.it/350x350\" width=\"400px\" height=\"150px\">"
+    document.getElementById("battleNumber").innerHTML = str0; 
+
+    // ----------------------- update the pictures -------------------------
+
+    // First picture
+    switch (str1) {
+        case "macmillan estate": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"macmillan_png\" alt=\"the macmillan\" src=\"res/macmillan.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/macmillan-hover.png' alt='macmillan' class='img-back'><img src='res/macmillan.png' alt='macmillan' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/macmillan.png\")";
+            break;
+        }
+        case "autohaven wreckers": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"autohaven_png\" alt=\"the autohaven\" src=\"res/autohaven.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/autohaven-hover.png' alt='autohaven' class='img-back'><img src='res/autohaven.png' alt='autohaven' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/autohaven.png\")";
+            break;
+        }
+        case "coldwind farm": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"coldwind_png\" alt=\"the coldwind\" src=\"res/coldwind.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/coldwind-hover.png' alt='coldwind' class='img-back'><img src='res/coldwind.png' alt='coldwind' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/coldwind.png\")";
+            break;
+        }
+        case "crotus prenn asylum": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"crotusprenn_png\" alt=\"the crotusprenn\" src=\"res/crotusprenn.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/crotusprenn-hover.png' alt='crotusprenn' class='img-back'><img src='res/crotusprenn.png' alt='crotusprenn' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/crotusprenn.png\")";
+            break;
+        }
+        case "haddonfield": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"myers_png\" alt=\"haddonfield\" src=\"res/haddonfield.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/haddonfield-hover.png' alt='haddonfield' class='img-back'><img src='res/haddonfield.png' alt='haddonfield' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/haddonfield.png.png\")";
+            break;
+        }
+        case "backwater swamp": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"backwater_png\" alt=\"the backwater\" src=\"res/backwater.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/backwater-hover.png' alt='backwater' class='img-back'><img src='res/backwater.png' alt='backwater' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/backwater.png\")";
+            break;
+        }
+        case "lery's memorial institute": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"backwater_png\" alt=\"the backwater\" src=\"res/backwater.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/lerys-hover.png' alt='lerys' class='img-back'><img src='res/lerys.png' alt='lerys' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/backwater.png\")";
+            break;
+        }
+        case "red forest": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"redforest_png\" alt=\"the redforest\" src=\"res/redforest.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/redforest-hover.png' alt='redforest' class='img-back'><img src='res/redforest.png' alt='redforest' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/redforest.png\")";
+            break;
+        }
+        case "springwood": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"springwood_png\" alt=\"springwood\" src=\"res/springwood.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/springwood-hover.png' alt='springwood' class='img-back'><img src='res/springwood.png' alt='springwood' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/springwood.png\")";
+            break;
+        }
+        case "the game": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"thegame_png\" alt=\"thegame\" src=\"res/thegame.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/thegame-hover.png' alt='thegame' class='img-back'><img src='res/thegame.png' alt='thegame' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/thegame.png\")";
+            break;
+        }
+        case "yamaoka estate": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"yamaoka_png\" alt=\"the yamaoka\" src=\"res/yamaoka.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/yamaoka-hover.png' alt='yamaoka' class='img-back'><img src='res/yamaoka.png' alt='yamaoka' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/yamaoka.png\")";
+            break;
+        }
+        case "ormond": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"ormond_png\" alt=\"the ormond\" src=\"res/ormond.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/ormond-hover.png' alt='ormond' class='img-back'><img src='res/ormond.png' alt='ormond' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/ormond.png\")";
+            break;
+        }
+        case "hawkins national laboratory": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"hawkins_png\" alt=\"the hawkins\" src=\"res/hawkins.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/hawkins-hover.png' alt='hawkins' class='img-back'><img src='res/hawkins.png' alt='hawkins' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/hawkins.png\")";
+            break;
+        }
+        case "grave of glenvale": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"glenvale_png\" alt=\"the glenvale\" src=\"res/glenvale.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/glenvale-hover.png' alt='glenvale' class='img-back'><img src='res/glenvale.png' alt='glenvale' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/glenvale.png\")";
+            break;
+        }
+        case "midwich elementary school": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"midwich_png\" alt=\"the midwich\" src=\"res/midwich.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/midwich-hover.png' alt='midwich' class='img-back'><img src='res/midwich.png' alt='midwich' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/midwich.png\")";
+            break;
+        }
+        case "raccoon city": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"raccoon_png\" alt=\"the raccoon\" src=\"res/raccoon.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/raccoon-hover.png' alt='raccoon' class='img-back'><img src='res/raccoon.png' alt='raccoon' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/raccoon.png\")";
+            break;
+        }
+        case "forsaken boneyard": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"forsakenboneyard_png\" alt=\"the forsakenboneyard\" src=\"res/forsakenboneyard.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/forsakenboneyard-hover.png' alt='forsakenboneyard' class='img-back'><img src='res/forsakenboneyard.png' alt='forsakenboneyard' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/forsakenboneyard.png\")";
+            break;
+        }
+        case "garden of joy": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"gardenofjoy_png\" alt=\"the gardenofjoy\" src=\"res/gardenofjoy.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/gardenofjoy-hover.png' alt='gardenofjoy' class='img-back'><img src='res/gardenofjoy.png' alt='gardenofjoy' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/gardenofjoy.png\")";
+            break;
+        }
+        case "the shattered square": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"shatteredsquare_png\" alt=\"the shatteredsquare\" src=\"res/shatteredsquare.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("leftField").innerHTML = "<div class='img-area'> <img src='res/shatteredsquare-hover.png' alt='shatteredsquare' class='img-back'><img src='res/shatteredsquare.png' alt='shatteredsquare' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/shatteredsquare.png\")";
+            break;
+        }
+
+
+    }
+    // Second picture
+    switch (str2) {
+        case "macmillan estate": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"macmillan_png\" alt=\"the macmillan\" src=\"res/macmillan.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/macmillan-hover.png' alt='macmillan' class='img-back'><img src='res/macmillan.png' alt='macmillan' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/macmillan.png\")";
+            break;
+        }
+        case "autohaven wreckers": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"autohaven_png\" alt=\"the autohaven\" src=\"res/autohaven.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/autohaven-hover.png' alt='autohaven' class='img-back'><img src='res/autohaven.png' alt='autohaven' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/autohaven.png\")";
+            break;
+        }
+        case "coldwind farm": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"coldwind_png\" alt=\"the coldwind\" src=\"res/coldwind.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/coldwind-hover.png' alt='coldwind' class='img-back'><img src='res/coldwind.png' alt='coldwind' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/coldwind.png\")";
+            break;
+        }
+        case "crotus prenn asylum": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"crotusprenn_png\" alt=\"the crotusprenn\" src=\"res/crotusprenn.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/crotusprenn-hover.png' alt='crotusprenn' class='img-back'><img src='res/crotusprenn.png' alt='crotusprenn' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/crotusprenn.png\")";
+            break;
+        }
+        case "haddonfield": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"myers_png\" alt=\"haddonfield\" src=\"res/haddonfield.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/haddonfield-hover.png' alt='haddonfield' class='img-back'><img src='res/haddonfield.png' alt='haddonfield' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/haddonfield.png.png\")";
+            break;
+        }
+        case "backwater swamp": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"backwater_png\" alt=\"the backwater\" src=\"res/backwater.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/backwater-hover.png' alt='backwater' class='img-back'><img src='res/backwater.png' alt='backwater' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/backwater.png\")";
+            break;
+        }
+        case "lery's memorial institute": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"backwater_png\" alt=\"the backwater\" src=\"res/backwater.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/lerys-hover.png' alt='lerys' class='img-back'><img src='res/lerys.png' alt='lerys' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/backwater.png\")";
+            break;
+        }
+        case "red forest": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"redforest_png\" alt=\"the redforest\" src=\"res/redforest.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/redforest-hover.png' alt='redforest' class='img-back'><img src='res/redforest.png' alt='redforest' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/redforest.png\")";
+            break;
+        }
+        case "springwood": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"springwood_png\" alt=\"springwood\" src=\"res/springwood.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/springwood-hover.png' alt='springwood' class='img-back'><img src='res/springwood.png' alt='springwood' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/springwood.png\")";
+            break;
+        }
+        case "the game": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"thegame_png\" alt=\"thegame\" src=\"res/thegame.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/thegame-hover.png' alt='thegame' class='img-back'><img src='res/thegame.png' alt='thegame' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/thegame.png\")";
+            break;
+        }
+        case "yamaoka estate": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"yamaoka_png\" alt=\"the yamaoka\" src=\"res/yamaoka.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/yamaoka-hover.png' alt='yamaoka' class='img-back'><img src='res/yamaoka.png' alt='yamaoka' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/yamaoka.png\")";
+            break;
+        }
+        case "ormond": {
+            //document.getElementById("rightField").innerHTML = "<img id=\"ormond_png\" alt=\"the ormond\" src=\"res/ormond.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/ormond-hover.png' alt='ormond' class='img-back'><img src='res/ormond.png' alt='ormond' class='img-front'></div>"
+            //document.getElementById("rightField").style.backgroundImage = "url(\"res/ormond.png\")";
+            break;
+        }
+        case "hawkins national laboratory": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"hawkins_png\" alt=\"the hawkins\" src=\"res/hawkins.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/hawkins-hover.png' alt='hawkins' class='img-back'><img src='res/hawkins.png' alt='hawkins' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/hawkins.png\")";
+            break;
+        }
+        case "grave of glenvale": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"glenvale_png\" alt=\"the glenvale\" src=\"res/glenvale.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/glenvale-hover.png' alt='glenvale' class='img-back'><img src='res/glenvale.png' alt='glenvale' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/glenvale.png\")";
+            break;
+        }
+        case "midwich elementary school": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"midwich_png\" alt=\"the midwich\" src=\"res/midwich.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/midwich-hover.png' alt='midwich' class='img-back'><img src='res/midwich.png' alt='midwich' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/midwich.png\")";
+            break;
+        }
+        case "raccoon city police station": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"raccoon_png\" alt=\"the raccoon\" src=\"res/raccoon.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/raccoon-hover.png' alt='raccoon' class='img-back'><img src='res/raccoon.png' alt='raccoon' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/raccoon.png\")";
+            break;
+        }
+        case "forsaken boneyard": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"forsakenboneyard_png\" alt=\"the forsakenboneyard\" src=\"res/forsakenboneyard.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/forsakenboneyard-hover.png' alt='forsakenboneyard' class='img-back'><img src='res/forsakenboneyard.png' alt='forsakenboneyard' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/forsakenboneyard.png\")";
+            break;
+        }
+        case "garden of joy": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"gardenofjoy_png\" alt=\"the gardenofjoy\" src=\"res/gardenofjoy.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/gardenofjoy-hover.png' alt='gardenofjoy' class='img-back'><img src='res/gardenofjoy.png' alt='gardenofjoy' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/gardenofjoy.png\")";
+            break;
+        }
+        case "the shattered square": {
+            //document.getElementById("leftField").innerHTML = "<img id=\"shatteredsquare_png\" alt=\"the shatteredsquare\" src=\"res/shatteredsquare.png\" width=\"300px\" height=\"350px\">";
+            document.getElementById("rightField").innerHTML = "<div class='img-area'> <img src='res/shatteredsquare-hover.png' alt='shatteredsquare' class='img-back'><img src='res/shatteredsquare.png' alt='shatteredsquare' class='img-front'></div>"
+            //document.getElementById("leftField").style.backgroundImage = "url(\"res/shatteredsquare.png\")";
+            break;
+        }
+
+
+    }
+
+    //document.getElementById("leftField").innerHTML = "<img src=\"res/macmillan.png\" width=\"300px\" height=\"350px\">"; 
+    //document.getElementById("leftField").innerHTML = str1; 
+    //document.getElementById("rightField").innerHTML = str2;
+    numQuestion++;
+    
+}
+ 
+ 
+ 
+//Convert numeric value into a name (emoticon)+++++++++++++++++++++++++++++++
+ 
+function toNameFace(n) {
+    var str = namMember[n];
+    /*
+    str += '<br />'; 
+    switch(n) { 
+    //case -1 Because it is a sample, delete it 
+    case -1: str+=""; break; 
+    }*/ 
+    return str;
+}
+//-->
+</script>
+ <head>
+    <title> dead by daylight maps </title>
+    <link rel="icon" type="image/png" href="res/icon.png">
+ </head>
+<link rel="stylesheet" href="styles.css">
+ 
+<body text="#000000" bgcolor="#ffffff" link="#e097d9" vlink="#e097d9" alink="#79a2c9">
+ 
+<center>
+    <br><br>
+    <b>dead by daylight maps/realms sorter</b>
+    <br><br>
+    <p class="instructions"> 
+        pick which map you like to face more in each battle to get <br>
+        an accurate list of your favourite maps in dead by daylight.
+        <br><br>
+    </p>
+    </center>
+</p>
+ 
+<table id="mainTable" align="center" padding="0">
+    <tbody>
+        <tr>
+            <td id="battleNumber" colspan="3" class="note">
+                <<p>
+                    battle #1, 0% sorted.
+                </p>
+            </td>
+        </tr>
+    
+    <tr>
+        <td id="leftField" onclick="if(finishFlag==0) sortList(-1);" rowspan="2" style="text-align:center;"></td>
+        <td class="middleField" onclick="if(finishFlag==0) sortList(0);" style="text-align:center;">   
+            both shite
+        </td> 
+        <td id="rightField" onclick="if(finishFlag==0) sortList(1);" rowspan="2"style="text-align:center;"></td> 
+    </tr>
+    
+    <tr>
+        <td class="middleField" id="bottomField" onclick="if(finishFlag==0) sortList(0);"style="text-align:center;"> 
+            no opinion 
+        </td>
+    </tr>
+    </tbody>
+</table>
+    <p class="instructions" style="font-size: 6px; color: rgb(153, 153, 153);"> 
+        <span class="warning">please note:</span> hitting 'no opinion' or 'both SHITE' frequently will negatively affect your results. hitting
+        backspace will result in all your progress being lost. please only do so if you think you made a fatal mistake.
+    </p>
+ <br> <br>
+<div id="resultField" style="text-align: center;">
+    
+</div>
+ 
+<script type="text/javascript">
+        initList(); 
+        showImage(); 
+    //-->
+</script>
+
+<div class="socialmedia">
+    <br>
+    <span style="color: rgb(170, 170, 170); font-size: 10px;"><p> made by themsgcentre</p></span>
+    <p> follow me on social media!<br><br></p>
+
+    <div class="row">
+        <div class='social-area'>
+            <a href="https://twitter.com/themsgcentre">
+            <img src='res/twitter-hover.png' alt='twitter' class='img-back'>
+            <img src='res/twitter.png' alt='twitter' class='img-front'>
+            </a> 
+        </div>
+
+        <div class='social-area'>
+            <a href="https://instagram.com/hnnh.mg">
+            <img src='res/instagram-hover.png' alt='instagram' class='img-back'>
+            <img src='res/instagram.png' alt='instagram' class='img-front'>
+            </a> 
+        </div>
+
+        <div class='social-area'>
+            <a href="https://www.tiktok.com/@themsgcentre?_t=8c3rZI8V3lb&_r=1">
+            <img src='res/tiktok-hover.png' alt='tiktok' class='img-back'>
+            <img src='res/tiktok.png' alt='tiktok' class='img-front'>
+            </a> 
+        </div>
+
+        <div class='social-area'>
+            <a href="https://open.spotify.com/user/kf0p74rfybwim9emlzaozegxz?si=c7baf589dad34751">
+            <img src='res/spotify-hover.png' alt='spotify' class='img-back'>
+            <img src='res/spotify.png' alt='spotify' class='img-front'>
+            </a> 
+        </div>
+    </div>
+</div>
+
+<p class="other">
+    <center>
+        <br>
+        <br>
+        <br>
+        <p class="instructions" style="font-size: 10px"> <span style="color: #22ccd4">DISCLAIMER:</span> this is a modified version of the code provided by <a href="http://biasorter.tumblr.com/">biasorter</a>
+            on tumblr. credits for the original source code go to them. 
+        </p>
+        <br><br><br><br>
+    </center>
+</small>
+</p>
+ 
+</html>
